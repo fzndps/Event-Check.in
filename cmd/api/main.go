@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/fzndps/eventcheck/config"
 	"github.com/fzndps/eventcheck/internal/delivery/http"
@@ -27,13 +26,11 @@ func main() {
 
 	defer db.Close()
 
-	duration := time.Duration(cfg.JWT.Expiry) * time.Hour
-
-	jwtManager := jwt.NewJWTManager(cfg.JWT.Secret, duration)
+	jwtManager := jwt.NewJWTManager(cfg.JWT.Secret)
 
 	organizerRepo := mysql.NewOrganizerRepositoryImpl(db)
 
-	authUsecase := usecase.NewAuthUsecase(organizerRepo, jwtManager)
+	authUsecase := usecase.NewAuthUsecase(organizerRepo, jwtManager, cfg)
 
 	authHandler := http.NewAutHandler(authUsecase)
 

@@ -11,9 +11,9 @@ var secretKey = "test-secret-key-min-32-character"
 var tokenDuration = 1 * time.Hour
 
 func TestGenerateToken(t *testing.T) {
-	manager := NewJWTManager(secretKey, tokenDuration)
+	manager := NewJWTManager(secretKey)
 
-	token, err := manager.GenerateToken(1, "test@example.com")
+	token, err := manager.GenerateToken(1, "test@example.com", int(tokenDuration))
 	if err != nil {
 		t.Fatal("Failed to generate token:", err)
 	}
@@ -26,9 +26,9 @@ func TestGenerateToken(t *testing.T) {
 }
 
 func TestTokenValidate(t *testing.T) {
-	manager := NewJWTManager(secretKey, tokenDuration)
+	manager := NewJWTManager(secretKey)
 
-	token, _ := manager.GenerateToken(123, "test@example.com")
+	token, _ := manager.GenerateToken(123, "test@example.com", int(tokenDuration))
 
 	claims, err := manager.ValidateToken(token)
 	if err != nil {
@@ -50,9 +50,9 @@ func TestTokenValidate(t *testing.T) {
 }
 
 func TestExpiredToken(t *testing.T) {
-	manager := NewJWTManager(secretKey, 1*time.Nanosecond)
+	manager := NewJWTManager(secretKey)
 
-	token, _ := manager.GenerateToken(1, "test@example.com")
+	token, _ := manager.GenerateToken(1, "test@example.com", int(tokenDuration))
 
 	time.Sleep(10 * time.Millisecond)
 
