@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-// Participant entity yang merepresentasikan peserta event
+// Participant entity peserta event
 type Participant struct {
 	ID          int64      `json:"id"`
 	EventID     string     `json:"event_id"`
@@ -18,19 +18,19 @@ type Participant struct {
 	QRCodeURL string `json:"qr_code_url,omitempty"`
 }
 
-// ParticipantCSVRow adalah struktur untuk parse CSV
+// ParticipantCSVRow struktur untuk parse CSV
 type ParticipantCSVRow struct {
 	Name  string `csv:"name"`  // Kolom "name" di CSV
 	Email string `csv:"email"` // Kolom "email" di CSV
 	Phone string `csv:"phone"` // Kolom "phone" di CSV
 }
 
-// UploadParticipantsRequest adalah request untuk upload CSV
+// UploadParticipantsRequest request untuk upload CSV
 type UploadParticipantsRequest struct {
 	EventID string
 }
 
-// UploadParticipantsResponse adalah response setelah upload CSV
+// UploadParticipantsResponse response setelah upload CSV
 type UploadParticipantsResponse struct {
 	Success       int      `json:"success"`
 	Failed        int      `json:"failed"`

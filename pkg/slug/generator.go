@@ -1,8 +1,10 @@
 package slug
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // Generate membuat slug dari string input
@@ -32,4 +34,20 @@ func Generate(input string) string {
 	}
 
 	return slug
+}
+
+// Mmebuat slug unique dengan menambah timestamp
+func GenerateUnique(input string) string {
+	baseSlug := Generate(input)
+	timestamp := time.Now().Unix()
+	return fmt.Sprintf("%s-%d", baseSlug, timestamp)
+}
+
+func Validate(slug string) bool {
+	if slug == "" || len(slug) > 100 {
+		return false
+	}
+
+	reg := regexp.MustCompile("^[a-z0-9-]+$")
+	return reg.MatchString(slug)
 }

@@ -24,8 +24,11 @@ func (r *organizerRepositoryImpl) Create(ctx context.Context, organizer *domain.
 	query := "INSERT INTO organizers (email, name, password_hash, created_at) VALUE (?, ?, ?, NOW())"
 
 	result, err := r.db.ExecContext(ctx, query, organizer.Email, organizer.Name, organizer.PasswordHash)
+
 	if err != nil {
-		return fmt.Errorf("failed to insert organizer: %w", err)
+		if isDuplicateKeyError(err) {
+			return fmt.Errorf("email already exists: %v", err)
+		}
 	}
 
 	id, err := result.LastInsertId()
