@@ -13,7 +13,7 @@ type Config struct {
 	Database DatabaseConfig
 	App      AppConfig
 	JWT      JWTConfig
-	Email    EmailConfig
+	SMTP     SMTPConfig
 }
 
 type DatabaseConfig struct {
@@ -33,7 +33,7 @@ type JWTConfig struct {
 	Expiry int
 }
 
-type EmailConfig struct {
+type SMTPConfig struct {
 	SMTPHost     string
 	SMTPPort     int
 	SMTPUsername string
@@ -41,8 +41,8 @@ type EmailConfig struct {
 	SMTPFrom     string
 }
 
-func LoadConfig(filenames ...string) (*Config, error) {
-	if err := godotenv.Load(filenames...); err != nil {
+func LoadConfig(filename ...string) (*Config, error) {
+	if err := godotenv.Load(filename...); err != nil {
 		return nil, fmt.Errorf("error loading .env file: %w", err)
 	}
 
@@ -64,7 +64,7 @@ func LoadConfig(filenames ...string) (*Config, error) {
 			Expiry: getEnvAsInt("JWT_EXPIRY", 72),
 		},
 
-		Email: EmailConfig{
+		SMTP: SMTPConfig{
 			SMTPHost:     os.Getenv("SMTP_HOST"),
 			SMTPPort:     getEnvAsInt("SMTP_PORT", 578),
 			SMTPUsername: os.Getenv("SMTP_USERNAME"),
@@ -106,13 +106,13 @@ func (c *Config) Validate() error {
 	}
 
 	// Cek email config (jika ingin kirim email)
-	if c.Email.SMTPHost == "" {
+	if c.SMTP.SMTPHost == "" {
 		return fmt.Errorf("SMTP_HOST is required")
 	}
-	if c.Email.SMTPUsername == "" {
+	if c.SMTP.SMTPUsername == "" {
 		return fmt.Errorf("SMTP_USERNAME is required")
 	}
-	if c.Email.SMTPPassword == "" {
+	if c.SMTP.SMTPPassword == "" {
 		return fmt.Errorf("SMTP_PASSWORD is required")
 	}
 
